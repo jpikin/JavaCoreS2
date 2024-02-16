@@ -22,8 +22,13 @@ public class App {
      * Инициализация объектов игры
      */
     static void initialize(){
-        fieldSizeX = 5;
-        fieldSizeY = 5;
+        System.out.println("Я хочу сыграть с тобой в одну игру, она называется\n" +
+                "КРЕСТИКИ-НОЛИКИ.\n" +
+                "Выбери размер поля:");
+
+
+        fieldSizeX = scanner.nextInt();
+        fieldSizeY = fieldSizeX;
         field = new char[fieldSizeX][fieldSizeY];
 
         for (int x = 0; x < fieldSizeX; x++){
@@ -31,6 +36,8 @@ public class App {
                 field[x][y] = DOT_EMPTY;
             }
         }
+        System.out.println("Чтобы выиграть, ты должен построить линию по вертикали,\n" +
+                "горизонтали или диагонали, состоящую из " + WIN_COUNT + " клеток.");
     }
 
     /**
@@ -64,7 +71,7 @@ public class App {
         int x;
         int y;
         do {
-            System.out.print("Введите координаты хода X и Y\n(от 1 до 3) через пробел: ");
+            System.out.print("Введи координаты хода X и Y\n(от 1 до "+fieldSizeX+") через пробел: ");
             x = scanner.nextInt() - 1;
             y = scanner.nextInt() - 1;
         }
@@ -152,20 +159,20 @@ public class App {
         return false;
     }
 
-    static boolean check1(int x, int y, char dot, int win){
-        //if (field[x][y + 1] == dot && field[x][y + 2] == dot && field[x][y + 3] == dot)
+    static boolean checkHorizont(int x, int y, char dot, int win){
+
         return false;
     }
 
-    static boolean check2(int x, int y, char dot, int win){
+    static boolean checkVertical(int x, int y, char dot, int win){
         return false;
     }
 
-    static boolean check3(int x, int y, char dot, int win){
+    static boolean checkDiagonalDown(int x, int y, char dot, int win){
         return false;
     }
 
-    static boolean check4(int x, int y, char dot, int win){
+    static boolean checkDiagonalUp(int x, int y, char dot, int win){
         return false;
     }
 
