@@ -67,7 +67,7 @@ public class App {
     /**
      * Ход игрока (человека)
      */
-    static void humanTurn(){
+    static boolean humanTurn(char dot, int win){
         int x;
         int y;
         do {
@@ -76,13 +76,15 @@ public class App {
             y = scanner.nextInt() - 1;
         }
         while (!isCellValid(x, y) || !isCellEmpty(x, y));
+        System.out.println("Твой ход:");
         field[x][y] = DOT_HUMAN;
+        return checkState(x,y,dot,win);
     }
 
     /**
      * Ход игрока (компьютера)
      */
-    static void aiTurn(){
+    static boolean aiTurn(char dot, int win){
         int x;
         int y;
         do{
@@ -90,7 +92,9 @@ public class App {
             y = random.nextInt(fieldSizeY);
         }
         while (!isCellEmpty(x, y));
+        System.out.println("Ход умнейшего компьютера:");
         field[x][y] = DOT_AI;
+        return checkState(x,y,dot,win);
     }
 
     /**
@@ -132,39 +136,40 @@ public class App {
      * @param dot фишка игрока
      * @return результат проверки победы
      */
-    static boolean checkWin(char dot){
-        // Проверка по трем горизонталям
-        if (field[0][0] == dot && field[0][1] == dot && field[0][2] == dot) return true;
-        if (field[1][0] == dot && field[1][1] == dot && field[1][2] == dot) return true;
-        if (field[2][0] == dot && field[2][1] == dot && field[2][2] == dot) return true;
-
-        // Проверка по трем вертикалям
-        if (field[0][0] == dot && field[1][0] == dot && field[2][0] == dot) return true;
-        if (field[0][1] == dot && field[1][1] == dot && field[2][1] == dot) return true;
-        if (field[0][2] == dot && field[1][2] == dot && field[2][2] == dot) return true;
-
-        // Проверка по двум диагоналям
-        if (field[0][0] == dot && field[1][1] == dot && field[2][2] == dot) return true;
-        if (field[0][2] == dot && field[1][1] == dot && field[2][0] == dot) return true;
-
-        return false;
-    }
-
-    static boolean checkWinV2(char dot){
-        for (int x = 0; x < fieldSizeX; x++){
-            for (int y = 0; y < fieldSizeY; y++){
-
-            }
+    static boolean checkWin(int x, int y, char dot, int win){
+        if (
+            checkHorizont(x, y, dot, win) ||
+            checkVertical(x, y, dot, win) ||
+            checkDiagonalDown(x, y, dot, win) ||
+            checkDiagonalUp(x, y, dot, win)
+            ) {
+            return true;
         }
+
         return false;
     }
 
     static boolean checkHorizont(int x, int y, char dot, int win){
-
+        int check = 0;
+        for (int i=0; i<fieldSizeX; i++){
+            if (field[x][i]==dot) {
+                check += 1;
+                System.out.println(check);
+                if(check==win){return true;}
+            } else {check=0;}
+        }
         return false;
     }
 
     static boolean checkVertical(int x, int y, char dot, int win){
+        int check = 0;
+        for (int i=0; i<fieldSizeX; i++){
+            if (field[i][y]==dot) {
+                check += 1;
+                System.out.println(check);
+                if(check==win){return true;}
+            } else {check=0;}
+        }
         return false;
     }
 
@@ -180,12 +185,12 @@ public class App {
     /**
      * Проверка состояния игры
      * @param dot фишка игрока
-     * @param s победный слоган
      * @return состояние игры
      */
-    static boolean checkState(char dot, String s){
-        if (checkWin(dot)){
-            System.out.println(s);
+    static boolean checkState(int x, int y, char dot,int win){
+        if (checkWin(x,y,dot,win)){
+            System.out.println("Вы победили!");
+            printField();
             return true;
         }
         else if (checkDraw()){
@@ -201,14 +206,16 @@ public class App {
             initialize();
             printField();
             while (true) {
-                humanTurn();
-                printField();
-                if (checkState(DOT_HUMAN, "Вы победили!"))
+                if(
+                humanTurn(DOT_HUMAN, WIN_COUNT)
+                ){
                     break;
-                aiTurn();
-                printField();
-                if (checkState(DOT_AI, "Вы победили!"))
-                    break;
+                } else printField();
+
+                if (
+                aiTurn(DOT_AI,WIN_COUNT)
+                ) break;
+                else printField();
             }
             System.out.print("Желаете сыграть еще раз? (Y - да): ");
             if(!scanner.next().equalsIgnoreCase("Y"))
