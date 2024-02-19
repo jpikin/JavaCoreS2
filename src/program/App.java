@@ -74,9 +74,12 @@ public class App {
             System.out.print("Введи координаты хода X и Y\n(от 1 до "+fieldSizeX+") через пробел: ");
             x = scanner.nextInt() - 1;
             y = scanner.nextInt() - 1;
+            System.out.println(x + " " + y);
+
         }
         while (!isCellValid(x, y) || !isCellEmpty(x, y));
         System.out.println("Твой ход:");
+
         field[x][y] = DOT_HUMAN;
         return checkState(x,y,dot,win);
     }
@@ -90,6 +93,7 @@ public class App {
         do{
             x = random.nextInt(fieldSizeX);
             y = random.nextInt(fieldSizeY);
+            System.out.println(x + " " + y);
         }
         while (!isCellEmpty(x, y));
         System.out.println("Ход умнейшего компьютера:");
@@ -154,7 +158,6 @@ public class App {
         for (int i=0; i<fieldSizeX; i++){
             if (field[x][i]==dot) {
                 check += 1;
-                System.out.println(check);
                 if(check==win){return true;}
             } else {check=0;}
         }
@@ -166,7 +169,6 @@ public class App {
         for (int i=0; i<fieldSizeX; i++){
             if (field[i][y]==dot) {
                 check += 1;
-                System.out.println(check);
                 if(check==win){return true;}
             } else {check=0;}
         }
@@ -174,10 +176,70 @@ public class App {
     }
 
     static boolean checkDiagonalDown(int x, int y, char dot, int win){
+        int check = 0;
+        int temp = 0;
+        if (x > y) {
+            for (int i = x-y; i <= fieldSizeX - (x-y); i++) {
+                if (field[i][temp] == dot) {
+                    check += 1;
+                    if (check == win) {
+                        return true;
+                    }
+                }
+                temp += 1;
+            }
+        } else if (x < y) {
+            for (int i = y - x; i <= fieldSizeX - (y - x); i++) {
+                if (field[temp][i] == dot) {
+                    check += 1;
+                    if (check == win) {
+                        return true;
+                    }
+                }
+                temp += 1;
+            }
+        }
+        else {
+            for (int i = 0; i < fieldSizeX; i++){
+                if (field[i][i] == dot) {
+                    check += 1;
+                    if (check == win) {
+                        return true;
+                    }
+                }
+                temp += 1;
+            }
+        }
+
         return false;
     }
 
     static boolean checkDiagonalUp(int x, int y, char dot, int win){
+        int check = 0;
+        int temp;
+        if (x >= y) {
+            temp = x+y - (fieldSizeX - 1);
+            for (int i=fieldSizeX-1; i > 0; i--) {  // ЗДЕСЬ НУЖНО ДОРАБОТАТЬ КОНЕЦ ОТСЧЕТА
+                if (field[i][temp] == dot) {
+                    check += 1;
+                    if (check == win) {
+                        return true;
+                    }
+                }
+                temp += 1;
+            }
+        } else {
+            for (int i = 0; i < fieldSizeX - 1 - (y - x); i++) {
+                temp = x+y;
+                if (field[temp][i] == dot) {
+                    check += 1;
+                    if (check == win) {
+                        return true;
+                    }
+                }
+                temp += 1;
+            }
+        }
         return false;
     }
 
