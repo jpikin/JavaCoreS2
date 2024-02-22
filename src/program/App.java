@@ -21,7 +21,7 @@ public class App {
     /**
      * Инициализация объектов игры
      */
-    static void initialize(){
+    static void initialize() {
         System.out.println("Я хочу сыграть с тобой в одну игру, она называется\n" +
                 "КРЕСТИКИ-НОЛИКИ.\n" +
                 "Выбери размер поля:");
@@ -31,8 +31,8 @@ public class App {
         fieldSizeY = fieldSizeX;
         field = new char[fieldSizeX][fieldSizeY];
 
-        for (int x = 0; x < fieldSizeX; x++){
-            for (int y = 0; y < fieldSizeY; y++){
+        for (int x = 0; x < fieldSizeX; x++) {
+            for (int y = 0; y < fieldSizeY; y++) {
                 field[x][y] = DOT_EMPTY;
             }
         }
@@ -43,22 +43,22 @@ public class App {
     /**
      * Печать текущего состояния игрового поля
      */
-    static void printField(){
+    static void printField() {
         System.out.print("+");
-        for (int i = 0; i < fieldSizeX; i++){
+        for (int i = 0; i < fieldSizeX; i++) {
             System.out.print("-" + (i + 1));
         }
         System.out.println("-");
 
-        for (int x = 0; x < fieldSizeX; x++){
+        for (int x = 0; x < fieldSizeX; x++) {
             System.out.print(x + 1 + "|");
-            for (int y = 0; y < fieldSizeY; y++){
+            for (int y = 0; y < fieldSizeY; y++) {
                 System.out.print(field[x][y] + "|");
             }
             System.out.println();
         }
 
-        for (int i = 0; i < fieldSizeX * 2 + 2; i++){
+        for (int i = 0; i < fieldSizeX * 2 + 2; i++) {
             System.out.print("-");
         }
         System.out.println();
@@ -67,11 +67,11 @@ public class App {
     /**
      * Ход игрока (человека)
      */
-    static boolean humanTurn(char dot, int win){
+    static boolean humanTurn(char dot, int win) {
         int x;
         int y;
         do {
-            System.out.print("Введи координаты хода X и Y\n(от 1 до "+fieldSizeX+") через пробел: ");
+            System.out.print("Введи координаты хода X и Y\n(от 1 до " + fieldSizeX + ") через пробел: ");
             x = scanner.nextInt() - 1;
             y = scanner.nextInt() - 1;
             System.out.println(x + " " + y);
@@ -81,53 +81,55 @@ public class App {
         System.out.println("Твой ход:");
 
         field[x][y] = DOT_HUMAN;
-        return checkState(x,y,dot,win);
+        return checkState(x, y, dot, win);
     }
 
     /**
      * Ход игрока (компьютера)
      */
-    static boolean aiTurn(char dot, int win){
+    static boolean aiTurn(char dot, int win) {
         int x;
         int y;
-        do{
+        do {
             x = random.nextInt(fieldSizeX);
             y = random.nextInt(fieldSizeY);
-            System.out.println(x + " " + y);
         }
         while (!isCellEmpty(x, y));
         System.out.println("Ход умнейшего компьютера:");
         field[x][y] = DOT_AI;
-        return checkState(x,y,dot,win);
+        return checkState(x, y, dot, win);
     }
 
     /**
      * Проверка, является ли ячейка игрового поля пустой
+     *
      * @param x координата
      * @param y координата
      * @return результат проверки
      */
-    static boolean isCellEmpty(int x, int y){
+    static boolean isCellEmpty(int x, int y) {
         return field[x][y] == DOT_EMPTY;
     }
 
     /**
      * Проверка валидности координат хода
+     *
      * @param x координата
      * @param y координата
      * @return результат проверки
      */
-    static boolean isCellValid(int x, int y){
+    static boolean isCellValid(int x, int y) {
         return x >= 0 && x < fieldSizeX && y >= 0 && y < fieldSizeY;
     }
 
     /**
      * Поверка на ничью (все ячейки игрового поля заполнены фишками человека или компьютера)
+     *
      * @return
      */
-    static boolean checkDraw(){
-        for (int x = 0; x < fieldSizeX; x++){
-            for (int y = 0; y < fieldSizeY; y++){
+    static boolean checkDraw() {
+        for (int x = 0; x < fieldSizeX; x++) {
+            for (int y = 0; y < fieldSizeY; y++) {
                 if (isCellEmpty(x, y)) return false;
             }
         }
@@ -137,49 +139,58 @@ public class App {
     /**
      * TODO: Переработать в рамках домашней работы
      * Метод проверки победы
+     *
      * @param dot фишка игрока
      * @return результат проверки победы
      */
-    static boolean checkWin(int x, int y, char dot, int win){
+    static boolean checkWin(int x, int y, char dot, int win) {
         if (
-            checkHorizont(x, y, dot, win) ||
-            checkVertical(x, y, dot, win) ||
-            checkDiagonalDown(x, y, dot, win) ||
-            checkDiagonalUp(x, y, dot, win)
-            ) {
+                checkHorizont(x, y, dot, win) ||
+                        checkVertical(x, y, dot, win) ||
+                        checkDiagonalDown(x, y, dot, win) ||
+                        checkDiagonalUp(x, y, dot, win)
+        ) {
             return true;
         }
 
         return false;
     }
 
-    static boolean checkHorizont(int x, int y, char dot, int win){
+    static boolean checkHorizont(int x, int y, char dot, int win) {
         int check = 0;
-        for (int i=0; i<fieldSizeX; i++){
-            if (field[x][i]==dot) {
+        for (int i = 0; i < fieldSizeX; i++) {
+            if (field[x][i] == dot) {
                 check += 1;
-                if(check==win){return true;}
-            } else {check=0;}
+                if (check == win) {
+                    return true;
+                }
+            } else {
+                check = 0;
+            }
         }
         return false;
     }
 
-    static boolean checkVertical(int x, int y, char dot, int win){
+    static boolean checkVertical(int x, int y, char dot, int win) {
         int check = 0;
-        for (int i=0; i<fieldSizeX; i++){
-            if (field[i][y]==dot) {
+        for (int i = 0; i < fieldSizeX; i++) {
+            if (field[i][y] == dot) {
                 check += 1;
-                if(check==win){return true;}
-            } else {check=0;}
+                if (check == win) {
+                    return true;
+                }
+            } else {
+                check = 0;
+            }
         }
         return false;
     }
 
-    static boolean checkDiagonalDown(int x, int y, char dot, int win){
+    static boolean checkDiagonalDown(int x, int y, char dot, int win) {
         int check = 0;
         int temp = 0;
         if (x > y) {
-            for (int i = x-y; i <= fieldSizeX - (x-y); i++) {
+            for (int i = x - y; i <= fieldSizeX - (x - y); i++) {
                 if (field[i][temp] == dot) {
                     check += 1;
                     if (check == win) {
@@ -198,9 +209,8 @@ public class App {
                 }
                 temp += 1;
             }
-        }
-        else {
-            for (int i = 0; i < fieldSizeX; i++){
+        } else {
+            for (int i = 0; i < fieldSizeX; i++) {
                 if (field[i][i] == dot) {
                     check += 1;
                     if (check == win) {
@@ -210,16 +220,26 @@ public class App {
                 temp += 1;
             }
         }
-
         return false;
     }
 
-    static boolean checkDiagonalUp(int x, int y, char dot, int win){
+    static boolean checkDiagonalUp(int x, int y, char dot, int win) {
         int check = 0;
-        int temp;
-        if (x >= y) {
-            temp = x+y - (fieldSizeX - 1);
-            for (int i=fieldSizeX-1; i > 0; i--) {  // ЗДЕСЬ НУЖНО ДОРАБОТАТЬ КОНЕЦ ОТСЧЕТА
+        int temp = 0;
+
+        if (x + y < fieldSizeX - 1) {
+            for (int i = 0; i < x+y+1; i++) {
+                if (field[i][temp] == dot) {
+                    check += 1;
+                    if (check == win) {
+                        return true;
+                    }
+                }
+                temp += 1;
+            }
+        } else if (x + y > fieldSizeX - 1) {
+            temp = (x+y) - fieldSizeX - 1;
+            for(int i = fieldSizeX - 1; i < (fieldSizeX*2-1) - (x+y); i--) {
                 if (field[i][temp] == dot) {
                     check += 1;
                     if (check == win) {
@@ -229,9 +249,8 @@ public class App {
                 temp += 1;
             }
         } else {
-            for (int i = 0; i < fieldSizeX - 1 - (y - x); i++) {
-                temp = x+y;
-                if (field[temp][i] == dot) {
+            for (int i = fieldSizeX-1; i >= 0; i--) {
+                if (field[i][temp] == dot) {
                     check += 1;
                     if (check == win) {
                         return true;
@@ -240,22 +259,22 @@ public class App {
                 temp += 1;
             }
         }
+
         return false;
     }
 
-
     /**
      * Проверка состояния игры
+     *
      * @param dot фишка игрока
      * @return состояние игры
      */
-    static boolean checkState(int x, int y, char dot,int win){
-        if (checkWin(x,y,dot,win)){
+    static boolean checkState(int x, int y, char dot, int win) {
+        if (checkWin(x, y, dot, win)) {
             System.out.println("Вы победили!");
             printField();
             return true;
-        }
-        else if (checkDraw()){
+        } else if (checkDraw()) {
             System.out.println("Ничья!");
             return true;
         }
@@ -268,19 +287,19 @@ public class App {
             initialize();
             printField();
             while (true) {
-                if(
-                humanTurn(DOT_HUMAN, WIN_COUNT)
-                ){
+                if (
+                        humanTurn(DOT_HUMAN, WIN_COUNT)
+                ) {
                     break;
                 } else printField();
 
                 if (
-                aiTurn(DOT_AI,WIN_COUNT)
+                        aiTurn(DOT_AI, WIN_COUNT)
                 ) break;
                 else printField();
             }
             System.out.print("Желаете сыграть еще раз? (Y - да): ");
-            if(!scanner.next().equalsIgnoreCase("Y"))
+            if (!scanner.next().equalsIgnoreCase("Y"))
                 break;
         }
     }
